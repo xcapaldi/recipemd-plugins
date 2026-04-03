@@ -1,0 +1,17 @@
+repos:
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: skills-ref-validate
+        name: validate skills
+        entry: bash -c 'for f in "$@"; do skills-ref validate "$(dirname "$f")"; done' --
+        language: python
+        additional_dependencies:
+          - 'skills-ref @ git+https://github.com/agentskills/agentskills.git@main#subdirectory=skills-ref'
+        files: SKILL\.md$
