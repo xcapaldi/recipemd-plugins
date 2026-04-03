@@ -1,0 +1,17 @@
+{
+  "name": "recipemd",
+  "owner": {
+    "name": "Xavier Capaldi"
+  },
+  "metadata": {
+    "description": "A set of plugins for working with recipes in the RecipeMD format and their ecosystem of tools",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "recipemd-core-plugin",
+      "source": "./plugins/recipemd-core-plugin",
+      "strict": true
+    }
+  ]
+}
