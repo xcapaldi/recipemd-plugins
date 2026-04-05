@@ -2,6 +2,7 @@
 name: extract
 description: Extract a recipe in RecipeMD format from another source
 license: MIT
+compatibility: Requires uv (https://docs.astral.sh/uv/) to run the scraper script. Requires recipemd-validate Go binary on PATH for validation.
 ---
 
 # Extract Recipe Skill
@@ -13,18 +14,18 @@ Two modes are available:
 - **cleanroom** — LLM rewrites description and instructions in a neutral tone to avoid
   attribution issues; ingredients (factual data) are kept as-is
 
-## Dependencies
+## Scripts
 
-**Scraper** — Python package:
-```bash
-pip install recipe-scrapers
-```
+| Script | Purpose |
+|---|---|
+| `scripts/extract.py` | Fetches a recipe URL and outputs structured JSON |
 
-**Validator** — Go binary (install via Go toolchain or download a pre-built binary):
+Run with `uv run` — dependencies are declared inline (PEP 723) and installed automatically:
+
 ```bash
-go install github.com/xcapaldi/recipemd-validate@latest
+uv run scripts/extract.py --help
+uv run scripts/extract.py <url>
 ```
-Or place the `recipemd-validate` executable anywhere on your `$PATH`.
 
 ## Invocation
 
@@ -38,14 +39,17 @@ Default mode is **normal** unless the user explicitly requests cleanroom.
 
 ## Step 1 — Scrape
 
-Run the extraction script that lives alongside this skill file. Resolve its path relative
-to the location of this `SKILL.md`:
+Run the extraction script from the skill root:
 
 ```bash
-python /path/to/skills/extract/extract.py <url>
+uv run scripts/extract.py <url>
 ```
 
-The script prints a JSON object to stdout. Key fields:
+On success the script prints a JSON object to **stdout**. On failure it writes a
+human-readable message to **stderr** and exits non-zero — report the error to the user
+and stop.
+
+Key JSON fields:
 
 | Field | Type | Notes |
 |---|---|---|
@@ -64,14 +68,12 @@ The script prints a JSON object to stdout. Key fields:
 | `host` | string | Source domain |
 | `canonical_url` | string | Canonical source URL |
 
-If the output contains `{"error": "..."}`, report the error to the user and stop.
-
 ---
 
 ## Step 2 — Convert to RecipeMD
 
 Use the scraped JSON and the RecipeMD specification (in `references/REFERENCE.md`) to
-produce a valid RecipeMD document. The full spec is reproduced below for reference.
+produce a valid RecipeMD document.
 
 ### RecipeMD structure
 
@@ -166,10 +168,9 @@ recipemd-validate <output-file>
 - If validation **passes**, report success to the user and show the output filename.
 - If validation **fails**, read the error messages, fix the RecipeMD content, rewrite
   the file, and re-run validation. Repeat until it passes (max 3 attempts).
-- If `recipemd-validate` is not found on `$PATH`, inform the user and provide the
-  install instructions:
-  ```bash
-  go install github.com/xcapaldi/recipemd-validate@latest
+- If `recipemd-validate` is not found, inform the user:
   ```
-  Or download a pre-built binary from
-  `https://github.com/xcapaldi/recipemd-validate/releases` and place it on `$PATH`.
+  recipemd-validate is not on PATH.
+  Install via: go install github.com/xcapaldi/recipemd-validate@latest
+  Or download a pre-built binary from https://github.com/xcapaldi/recipemd-validate/releases
+  ```
