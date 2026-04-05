@@ -164,17 +164,7 @@ specified by the user).
 
 ## Step 4 — Validate
 
-Run the validator on the output file using `go run` (no pre-installed binary needed):
+Delegate to the **`validate`** skill, passing the output file path.
 
-```bash
-go run github.com/xcapaldi/recipemd-validate@latest <output-file>
-```
-
-- If validation **passes**, report success to the user and show the output filename.
-- If validation **fails**, read the error messages, fix the RecipeMD content, rewrite
-  the file, and re-run validation. Repeat until it passes (max 3 attempts).
-- If Go is not available, inform the user that Go 1.21+ must be installed
-  (https://go.dev/dl/) or they can pre-install the binary with:
-  ```bash
-  go install github.com/xcapaldi/recipemd-validate@latest
-  ```
+The validate skill handles validator selection (Go preferred, uv/pipx fallback)
+and will prompt you to fix any errors before reporting a final result.
