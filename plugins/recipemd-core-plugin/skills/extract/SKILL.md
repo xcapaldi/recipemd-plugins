@@ -15,10 +15,16 @@ Two modes are available:
 
 ## Dependencies
 
+**Scraper** — Python package:
 ```bash
 pip install recipe-scrapers
-pip install git+https://github.com/xcapaldi/recipemd-validate
 ```
+
+**Validator** — Go binary (install via Go toolchain or download a pre-built binary):
+```bash
+go install github.com/xcapaldi/recipemd-validate@latest
+```
+Or place the `recipemd-validate` executable anywhere on your `$PATH`.
 
 ## Invocation
 
@@ -160,8 +166,10 @@ recipemd-validate <output-file>
 - If validation **passes**, report success to the user and show the output filename.
 - If validation **fails**, read the error messages, fix the RecipeMD content, rewrite
   the file, and re-run validation. Repeat until it passes (max 3 attempts).
-- If `recipemd-validate` is not installed, inform the user and provide the install
-  command:
+- If `recipemd-validate` is not found on `$PATH`, inform the user and provide the
+  install instructions:
   ```bash
-  pip install git+https://github.com/xcapaldi/recipemd-validate
+  go install github.com/xcapaldi/recipemd-validate@latest
   ```
+  Or download a pre-built binary from
+  `https://github.com/xcapaldi/recipemd-validate/releases` and place it on `$PATH`.
