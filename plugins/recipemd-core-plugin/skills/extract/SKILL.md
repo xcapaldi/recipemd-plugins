@@ -2,7 +2,7 @@
 name: extract
 description: Extract a recipe in RecipeMD format from another source
 license: MIT
-compatibility: Requires uv (https://docs.astral.sh/uv/) to run the scraper script. Requires recipemd-validate Go binary on PATH for validation.
+compatibility: Scraper requires Python 3.11+ with recipe-scrapers installed; run via uv, pipx, or python directly. Validator requires Go 1.21+ (invoked with go run).
 ---
 
 # Extract Recipe Skill
@@ -20,12 +20,15 @@ Two modes are available:
 |---|---|
 | `scripts/extract.py` | Fetches a recipe URL and outputs structured JSON |
 
-Run with `uv run` — dependencies are declared inline (PEP 723) and installed automatically:
+Dependencies are declared inline via PEP 723. Pick whichever runner is available:
 
 ```bash
-uv run scripts/extract.py --help
-uv run scripts/extract.py <url>
+uv run scripts/extract.py <url>          # auto-installs deps
+pipx run scripts/extract.py <url>        # auto-installs deps
+python scripts/extract.py <url>          # requires: pip install recipe-scrapers
 ```
+
+Pass `--help` to see the full interface.
 
 ## Invocation
 
@@ -39,10 +42,12 @@ Default mode is **normal** unless the user explicitly requests cleanroom.
 
 ## Step 1 — Scrape
 
-Run the extraction script from the skill root:
+Run the extraction script from the skill root using whichever Python runner is available:
 
 ```bash
 uv run scripts/extract.py <url>
+pipx run scripts/extract.py <url>
+python scripts/extract.py <url>
 ```
 
 On success the script prints a JSON object to **stdout**. On failure it writes a
@@ -159,18 +164,17 @@ specified by the user).
 
 ## Step 4 — Validate
 
-Run the validator on the output file:
+Run the validator on the output file using `go run` (no pre-installed binary needed):
 
 ```bash
-recipemd-validate <output-file>
+go run github.com/xcapaldi/recipemd-validate@latest <output-file>
 ```
 
 - If validation **passes**, report success to the user and show the output filename.
 - If validation **fails**, read the error messages, fix the RecipeMD content, rewrite
   the file, and re-run validation. Repeat until it passes (max 3 attempts).
-- If `recipemd-validate` is not found, inform the user:
-  ```
-  recipemd-validate is not on PATH.
-  Install via: go install github.com/xcapaldi/recipemd-validate@latest
-  Or download a pre-built binary from https://github.com/xcapaldi/recipemd-validate/releases
+- If Go is not available, inform the user that Go 1.21+ must be installed
+  (https://go.dev/dl/) or they can pre-install the binary with:
+  ```bash
+  go install github.com/xcapaldi/recipemd-validate@latest
   ```
