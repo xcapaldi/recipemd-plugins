@@ -12,5 +12,3 @@ specification along with the extended Claude support. They should work with
 
 Only the "core" plugin is available currently which provides features for working
 with the RecipeMD format directly.
-
-

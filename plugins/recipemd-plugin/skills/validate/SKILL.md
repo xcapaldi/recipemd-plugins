@@ -27,7 +27,7 @@ to the Python CLI only when Go is not available.
 Check availability by running `go version`, `uv --version`, or `pipx --version`.
 Use whichever is present, in that order.
 
-If none of the runners are available, use `references/REFERENCE.md` to do a 
+If none of the runners are available, use `references/REFERENCE.md` to do a
 manual validation but be sure to warn the user you are falling back to this and
 that there may be errors due to your stochastic nature.
 
