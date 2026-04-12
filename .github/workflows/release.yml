@@ -46,7 +46,7 @@ jobs:
           skills_dir="plugins/$plugin/skills"
           for skill in "$skills_dir"/*/; do
             name=$(basename "$skill")
-            (cd "$skills_dir" && zip -r "$OLDPWD/$plugin-$name.skill" "$name")
+            (cd "$skills_dir" && zip -r "$OLDPWD/$name.skill" "$name")
           done
 
       - name: Create release
