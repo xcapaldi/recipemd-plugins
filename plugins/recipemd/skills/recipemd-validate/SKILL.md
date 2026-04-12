@@ -1,11 +1,11 @@
 ---
-name: validate
+name: recipemd-validate
 description: Validate a RecipeMD file against the spec, using the Go validator if available or falling back to the recipemd Python CLI
 license: MIT
 compatibility: Requires either Go 1.21+ (go run) or Python 3.11+ with uv or pipx for the fallback CLI. If none are available, manual validation can be attempted.
 metadata:
     author: Xavier Capaldi
-    version: 0.1.0
+    version: 0.1.1
 ---
 
 # Validate Recipe Skill
