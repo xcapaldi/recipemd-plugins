@@ -1,0 +1,10 @@
+{
+  "name": "recipemd-plugin",
+  "description": "Adds /extract and /validate skills to aid in scraping and writing recipes in RecipeMD format.",
+  "author": {
+    "name": "Xavier Capaldi"
+  },
+  "version": "0.1.0",
+  "license": "MIT",
+  "keywords": ["markdown", "recipe", "cooking"]
+}

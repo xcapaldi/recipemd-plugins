@@ -3,6 +3,9 @@ name: extract
 description: Extract a recipe in RecipeMD format from another source
 license: MIT
 compatibility: Scraper requires Python 3.11+ with recipe-scrapers installed; run via uv, pipx, or python directly. Validator requires Go 1.21+ (invoked with go run). Can also do the extraction without relying on any external tooling.
+metadata:
+    author: Xavier Capaldi
+    version: 0.1.0
 ---
 
 =======

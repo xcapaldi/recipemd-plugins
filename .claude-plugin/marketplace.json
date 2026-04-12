@@ -1,16 +1,17 @@
 {
-  "name": "recipemd",
+  "name": "xcapaldi-plugins",
   "owner": {
     "name": "Xavier Capaldi"
   },
   "metadata": {
-    "description": "A set of plugins for working with recipes in the RecipeMD format and their ecosystem of tools",
+    "description": "A curated set of public plugins.",
     "version": "0.1.0"
   },
   "plugins": [
     {
-      "name": "recipemd-core-plugin",
-      "source": "./plugins/recipemd-core-plugin",
+      "name": "recipemd-plugin",
+      "source": "./plugins/recipemd-plugin",
+      "description": "Adds /extract and /validate skills to aid in scraping and writing recipes in RecipeMD format.",
       "strict": true
     }
   ]

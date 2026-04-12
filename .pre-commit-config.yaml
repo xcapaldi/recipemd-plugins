@@ -10,3 +10,4 @@ repos:
     rev: v0.1.0
     hooks:
       - id: skills-ref-validate
+        files: ^plugins/
