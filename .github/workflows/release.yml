@@ -1,0 +1,32 @@
+name: Release skill bundles
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build .skill bundles
+        run: |
+          skills_dir="plugins/recipemd-core-plugin/skills"
+          for skill in "$skills_dir"/*/; do
+            name=$(basename "$skill")
+            staging=$(mktemp -d)
+            # -L resolves symlinks (references/ contains symlinks to repo root)
+            cp -rL "$skill" "$staging/$name"
+            (cd "$staging" && zip -r "recipemd-$name.skill" "$name")
+            mv "$staging/recipemd-$name.skill" .
+          done
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" *.skill --generate-notes
