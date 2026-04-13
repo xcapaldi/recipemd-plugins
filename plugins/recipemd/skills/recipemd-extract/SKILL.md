@@ -27,9 +27,23 @@ The user will typically say something like:
 
 Default mode is **normal** unless the user explicitly requests cleanroom.
 
-## Instructions
+## Execution
 
-### Step 1: Scrape
+This skill has two execution paths for the scraping step. Determine
+which to use before starting:
+
+1. **Script path** (preferred): Run `uv run scripts/extract.py --help` as a
+   preflight. If it exits 0, network and dependencies are available — use the
+   script for scraping.
+
+2. **Fallback path**: If preflight fails (network disabled, missing runner,
+   import errors), skip the script and scrape manually. Do not attempt to
+   install packages or retry the script.
+
+Steps 2–4 (convert, write, validate) are identical regardless of which path
+is used.
+
+### Script path — Step 1: Scrape
 
 `scripts/extract.py` can be used to scrape a recipe URL and output structured
 JSON. Dependencies are declared inline via PEP 723. To run the script requires
@@ -66,17 +80,21 @@ Key JSON fields:
 | `host` | string | Source domain |
 | `canonical_url` | string | Canonical source URL |
 
-If there is no runner available or if there is an error running the extraction
-script, attempt to scrape the recipe manually, looking especially for a similar
-set of JSON fields. Be sure to indicate to the user that you are doing this
-manually and there may be errors introduced due to your stochastic nature.
+### Fallback path — Step 1: Scrape manually
 
-### Step 2: Convert to RecipeMD
+Fetch the URL and extract recipe data directly, looking especially for
+`application/ld+json` script blocks containing schema.org `Recipe` markup.
+The target fields are the same as the JSON table above.
 
-Use the scraped JSON and the RecipeMD specification (in
+Warn the user that you are scraping manually and that there may be errors
+due to your stochastic nature.
+
+## Step 2: Convert to RecipeMD
+
+Use the scraped data and the RecipeMD specification (in
 `references/REFERENCE.md`) to produce a valid RecipeMD document.
 
-#### Normal mode
+### Normal mode
 
 - Keep title, description, ingredients, and instructions **verbatim** from the
   scraped data.
@@ -93,7 +111,7 @@ Use the scraped JSON and the RecipeMD specification (in
   > sure you have the right to store and share this content before distributing
   > it.
 
-#### Cleanroom mode
+### Cleanroom mode
 
 The goal is a clean, independent document that conveys the same culinary
 information without copying the original author's expression.
@@ -114,7 +132,7 @@ information without copying the original author's expression.
 - If you have access to a set of recipes from the user, you can try to match the
   tone and patterns in that set of recipes **if** the user requests it.
 
-### Step 3: Write output file
+## Step 3: Write output file
 
 Derive a filename from the title: lowercase, spaces replaced with hyphens,
 non-alphanumeric characters stripped, `.md` extension. Example:
@@ -123,7 +141,7 @@ non-alphanumeric characters stripped, `.md` extension. Example:
 Write the RecipeMD content to that file in the current working directory (or a
 path specified by the user).
 
-### Step 4: Validate
+## Step 4: Validate
 
 Delegate to the **`validate`** skill, passing the output file path.
 
