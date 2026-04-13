@@ -13,25 +13,33 @@ metadata:
 Validate a RecipeMD file and report any structural errors. Used as the final
 step after recipe extraction or editing.
 
+## Execution
+
+Four execution paths are available. Check tool availability in order and use
+the first that succeeds — do not attempt a lower-priority path if a
+higher-priority one is available.
+
+| Priority | Check | Command |
+|---|---|---|
+| 1 (preferred) | `go version` exits 0 | `go run github.com/xcapaldi/recipemd-validate@latest <file>` |
+| 2 | `uv --version` exits 0 | `uvx recipemd <file>` |
+| 3 | `pipx --version` exits 0 | `pipx run recipemd <file>` |
+| 4 (last resort) | none of the above | manual validation against `references/REFERENCE.md` |
+
+If manual validation is necessary, warn the user that results may contain
+errors due to your stochastic nature.
+
 ## Instructions
 
-### 1: Run the validator
+### Step 1: Run the validator
 
-Always try Go first — it produces more detailed, actionable output. Fall back
-to the Python CLI only when Go is not available.
+Run the availability checks above and execute the appropriate command.
 
-1. **Go** (preferred): `go run github.com/xcapaldi/recipemd-validate@latest <file>`
-2. **Python via uv** (fallback): `uvx recipemd <file>`
-3. **Python via pipx** (fallback): `pipx run recipemd <file>`
+Go is preferred because it produces more detailed, actionable output. The
+Python CLI (via uv or pipx) is functionally equivalent but may give terser
+messages.
 
-Check availability by running `go version`, `uv --version`, or `pipx --version`.
-Use whichever is present, in that order.
-
-If none of the runners are available, use `references/REFERENCE.md` to do a
-manual validation but be sure to warn the user you are falling back to this and
-that there may be errors due to your stochastic nature.
-
-### 2: Interpret results
+### Step 2: Interpret results
 
 - **Exit code 0 / no errors**: file is valid. Report success and the filename.
 - **Errors reported**: the file has structural problems. Read each error, fix
@@ -51,7 +59,7 @@ Common errors and fixes:
 
 Consult `references/REFERENCE.md` for the full format specification.
 
-### 3: Report
+### Step 3: Report
 
 Tell the user whether validation passed or failed, which validator was used,
 and (on failure) what was fixed.
